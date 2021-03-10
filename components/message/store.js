@@ -1,4 +1,3 @@
-
 const Model = require('./model');
 
 
@@ -8,39 +7,51 @@ function addMessage(message) {
   return myMessage.save();
 }
 
-async function getMessages(filterUser) {
-  // return list;
-  let filter = {};
-  if (filterUser != null) {
-    filter = { user: new RegExp(`^${filterUser}$`, "i") };
-  }
-  const messages = await Model.find(filter);
-  console.log('------------');
-  console.log(messages);
-  return messages;
+function getMessages(filterUser) {
+  return new Promise((resolve, reject) => {
+    let filter = {};
+    if (filterUser != null) {
+      filter = {
+        user: new RegExp(`^${filterUser}$`, "i")
+      };
+    }
+
+    Model.find(filter)
+      .populate('user')
+      .exec((error, populated)=>{
+          if(error){
+            reject(error);
+            return false;
+          }
+          resolve(populated);
+      });
+  });
+
 }
 
 async function updateText(id, message) {
-  const foundMessage = await Model.findOneAndUpdate(
-    { _id: id },
-    { message },
-    { new: true }
-  )
-  
+  const foundMessage = await Model.findOneAndUpdate({
+    _id: id
+  }, {
+    message
+  }, {
+    new: true
+  })
+
   return foundMessage;
 }
 
 function removeMessage(id) {
   return Model.deleteOne({
-      _id: id
+    _id: id
   });
 }
 
 module.exports = {
   add: addMessage,
   list: getMessages,
-  
+
   //get
   update: updateText,
-  remove:removeMessage,
+  remove: removeMessage,
 };

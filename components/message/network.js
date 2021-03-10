@@ -7,7 +7,7 @@ const router = express.Router();
 //listar todos o por usuario
 router.get('/', function(req, res){
     const filterMessages = req.query.user || null;
-    console.log(filterMessages);
+    filterMessages?console.log('filtro '+filterMessages):console.log('sin filtro ');
 
     controller.getMessage(filterMessages)
         .then((messageList)=>{
