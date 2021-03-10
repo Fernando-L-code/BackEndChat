@@ -1,9 +1,13 @@
 const express = require('express');
 const response = require('../../network/response');
 const controller = require ('./controller');
-
+const multer = require('multer');
 const router = express.Router();
 
+
+const upload = multer({
+    dest: 'uploads/',
+});
 //listar todos o por usuario
 router.get('/', function(req, res){
     const filterMessages = req.query.chat || null;
@@ -20,7 +24,7 @@ router.get('/', function(req, res){
 })
 
 //crear
-router.post('/', function(req, res){
+router.post('/',upload.single('file'), function(req, res){
     console.log(req.body.chat);
     controller.addMessage(req.body.chat, req.body.user, req.body.message)
         .then((fullMessage)=>{
