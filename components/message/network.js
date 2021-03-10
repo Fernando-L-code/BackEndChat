@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 const upload = multer({
-    dest: 'uploads/',
+    dest: 'public/files/',
 });
 //listar todos o por usuario
 router.get('/', function(req, res){
@@ -25,8 +25,8 @@ router.get('/', function(req, res){
 
 //crear
 router.post('/',upload.single('file'), function(req, res){
-    console.log(req.body.chat);
-    controller.addMessage(req.body.chat, req.body.user, req.body.message)
+    //  console.log(req.file);
+    controller.addMessage(req.body.chat, req.body.user, req.body.message, req.file)
         .then((fullMessage)=>{
             response.success(req,res,fullMessage, 201); 
         })
