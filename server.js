@@ -2,21 +2,25 @@ const express = require('express');
 //  o  esto solo en ES6
 // import express from 'express';
 
+const app = express();
+const server = require('http').Server(app);
+
+const socket = require('./socket');
 const db = require('./db');
 
 // const router = require('./components/message/network');
 const router = require('./network/routes');
 
-const url ='mongodb+srv://tester:1234@cluster0.cjrjs.mongodb.net/test?retryWrites=true&w=majority';
-db(url);
+const config = require('./config');
+db(config.dbUrl);
 
 // ---------------------------------------
-var app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended : true }));
 
 // app.use(router);
 
+socket.connect(server);
 router(app);
 
 
@@ -28,5 +32,6 @@ app.use("/app", express.static('public'));
 //     res.send('hola')
 // });
 
-app.listen(3000);
-console.log('La aplicacion esta corriendo en http://localhost:3000');
+server.listen(config.port, function(){
+    console.log(`La aplicacion esta corriendo en http://localhost:${config.port}`);   
+});
