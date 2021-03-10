@@ -7,28 +7,46 @@ function addMessage(message) {
   return myMessage.save();
 }
 
-function getMessages(filterUser) {
+// function getMessages(filterUser) {
+//   return new Promise((resolve, reject) => {
+//     let filter = {};
+//     if (filterUser != null) {
+//       filter = {
+//         user: new RegExp(`^${filterUser}$`, "i")
+//       };
+//     }
+
+//     Model.find(filter)
+//       .populate('user')
+//       .exec((error, populated)=>{
+//           if(error){
+//             reject(error);
+//             return false;
+//           }
+//           resolve(populated);
+//       });
+//   });
+
+// }
+
+async function getMessages(filterChat) {
   return new Promise((resolve, reject) => {
-    let filter = {};
-    if (filterUser != null) {
-      filter = {
-        user: new RegExp(`^${filterUser}$`, "i")
-      };
-    }
+      let filter = {};
+      if (filterChat !== null) {
+          filter = { chat: filterChat };
+      }
+      Model.find(filter)
+          .populate('user')
+          .exec((error, populated) => {
+              if (error) {
+                  reject(error);
+                  return false;
+              }
 
-    Model.find(filter)
-      .populate('user')
-      .exec((error, populated)=>{
-          if(error){
-            reject(error);
-            return false;
-          }
-          resolve(populated);
-      });
-  });
-
+              resolve(populated);
+          });
+  })
 }
-
 async function updateText(id, message) {
   const foundMessage = await Model.findOneAndUpdate({
     _id: id

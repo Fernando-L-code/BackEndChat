@@ -6,7 +6,7 @@ const router = express.Router();
 
 //listar todos o por usuario
 router.get('/', function(req, res){
-    const filterMessages = req.query.user || null;
+    const filterMessages = req.query.chat || null;
     filterMessages?console.log('filtro '+filterMessages):console.log('sin filtro ');
 
     controller.getMessage(filterMessages)
@@ -21,12 +21,13 @@ router.get('/', function(req, res){
 
 //crear
 router.post('/', function(req, res){
-    controller.addMessage(req.body.user, req.body.message)
+    console.log(req.body.chat);
+    controller.addMessage(req.body.chat, req.body.user, req.body.message)
         .then((fullMessage)=>{
             response.success(req,res,fullMessage, 201); 
         })
         .catch(e=>{
-            response.error(req,res,"Informacion invalida", 400, "Error en el controlador")
+            response.error(req,res,"Informacion invalida", 400, e)
         });
 
 })

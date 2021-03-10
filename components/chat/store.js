@@ -1,12 +1,12 @@
 const Model = require('./model');
 
-function addMessage(chat) {
+function addChat(chat) {
     const myChat = new Model(chat);
     console.log(myChat);
     return myChat.save();
 }
 
-function getMessages(chat) {
+function listChats(chat) {
     return new Promise((resolve, reject) => {
         let filter = {};
         if (chat != null) {
@@ -29,7 +29,7 @@ function getMessages(chat) {
 }
 
 module.exports = {
-    add: addMessage,
-    list: getMessages,
+    add: addChat,
+    list: listChats,
     //get
 };
